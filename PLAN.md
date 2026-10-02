@@ -143,12 +143,11 @@ by value, not fixed — reorder freely.
 ### Phase 0 — Ground (first pass, 2 Oct 2026)
 - [x] Name, folder, Vite + TS scaffold, design tokens in both themes
 - [x] Vercel project `tally`, domain `tally.mehmetdedeler.com` attached
-- [ ] DNS: `A tally → 76.76.21.21` at Cloudflare, DNS only (grey cloud)
-- [ ] Redirect `replike.vercel.app` → `tally.mehmetdedeler.com` (ready to
-      deploy once DNS resolves; old paths `/workout`, `/history`, `/trends`
-      map to their new pages)
-- [ ] mehmetdedeler.com map: the Replike island renamed to Tally (edited,
-      not yet deployed)
+- [x] DNS: `A tally → 76.76.21.21` at Cloudflare, DNS only (grey cloud)
+- [x] Redirect `replike.vercel.app` → `tally.mehmetdedeler.com` (old paths
+      `/workout`, `/history`, `/trends` map to their new pages)
+- [x] mehmetdedeler.com map: the Replike island renamed to Tally
+- [x] GitHub repo renamed Replike → Tally; pushes to `main` deploy to Vercel
 
 ### Phase 1 — The core loop (first pass, 2 Oct 2026)
 - [x] Home: hero with the inked figure counting its own squats; the exercise
