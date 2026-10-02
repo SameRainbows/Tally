@@ -1,25 +1,8 @@
-# dependencies
-/node_modules
+node_modules/
+dist/
+.vercel/
+public/mediapipe/
+*.log
 
-# next.js
-/.next/
-/out/
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
-
-Ideas on Improvements.txt
-
-main.py
-main_test.py
-# Feedback Logs
-user_feedback_report.md
+.vercel
+.env*

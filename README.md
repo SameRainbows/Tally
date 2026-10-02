@@ -1,88 +1,62 @@
-# Replike (RepDetect)
+# Tally
 
-Browser-based workout rep counting using real-time pose detection.
+Counts your reps by watching you move. In the browser, nothing uploaded.
 
-## Live demo
+**https://tally.mehmetdedeler.com**
 
-https://replike.vercel.app/
+Prop up your phone or laptop, pick a movement, raise both hands and go. Tally
+finds 33 points on your body with an on-device pose model, measures one angle
+per movement, and inks a tally mark for every rep. If a rep doesn't count, it
+says why.
 
-## What it does
+Formerly Replike (and before that RepDetect). Rebuilt from scratch in October
+2026 — see [PLAN.md](PLAN.md) for the goals, design and roadmap.
 
-Replike uses your device camera and an on-device pose model to track body landmarks, guide calibration, and count reps for multiple exercises.
-It supports free workouts, guided plans, and custom workouts you can build yourself. Sessions are stored locally in your browser.
+## Movements
 
-## Key features
+Squats · push-ups · jumping jacks · lunges · plank (timed hold) · sit-ups ·
+high knees · burpees · jump squats
 
-- **Hands-free calibration**
-  The app automatically detects when you hold a stable pose and captures calibration frames without button clicks.
-- **Multiple exercises + per-exercise state machines**
-  Includes jumping jacks, squats, lunges, high knees, jump squats, and burpees.
-- **Guided workout plans**
-  Preset plans with work/rest steps, timers, and step-by-step progression.
-- **Custom Workout Builder**
-  Create your own workouts (rounds + steps) with reps, timed intervals, and rest.
-- **Rep quality scoring + session summary**
-  Each counted rep is classified as clean/ok/sloppy using range-of-motion and tempo heuristics.
-  A session summary appears after saving or completing a workout.
-- **Tracking health + setup wizard**
-  Live tracking status (good/partial/lost) with FPS and actionable tips. Includes a Setup wizard modal.
-- **Workout history**
-  Completed plan/custom sessions are auto-saved; free workouts can be saved manually.
-  Sessions are stored in `localStorage`.
-- **Goals + sound cues**
-  Optional rep goals for free workouts (beep when you reach the goal) and optional beeps on each counted rep.
-- **In-video overlays**
-  Landmarks and prompts are rendered to a canvas overlay aligned to the displayed video.
+## How it counts
 
-## How to use
+Each movement in [`src/pose/exercises.ts`](src/pose/exercises.ts) declares what
+it needs to see and returns one number per frame — usually a 3D joint angle
+from MediaPipe's world landmarks, which doesn't change with where you stand in
+the frame. [`src/pose/counter.ts`](src/pose/counter.ts) turns that number into
+reps:
 
-1. Go to **Workout**.
-2. Allow camera access.
-3. Follow the on-screen calibration prompts.
-4. Choose:
-   - **Free workout** to pick an exercise and count reps.
-   - **Guided plan** to run a preset plan.
-   - **Custom workout** to run a workout you built in the **Builder**.
-5. View saved sessions under **History**.
-6. (Optional) Use **Settings** to enable calibration and configure sound cues.
+- depth is the reading mapped onto the movement's range (0 at the top, 1 at the
+  bottom)
+- a rep is an excursion past 65% that returns below 24%
+- a shallow excursion is a miss, with a reason
+- the range learns from your own reps (never stricter than the default), and
+  three consistent shallow reps move the line toward you, at most 30%
+- landmarks are smoothed with a One Euro filter first
 
-## Tech stack
+The tests run the counter against synthetic movement generated from the same
+stick-figure keyframes used for the demos: the figure does ten squats, the
+counter must count ten.
 
-- Next.js (App Router)
-- React + TypeScript
-- MediaPipe Tasks Vision (`PoseLandmarker`)
+## Privacy
 
-## Privacy & permissions
+Video never leaves the device. Sets are stored in `localStorage` and can be
+exported to JSON from the Ledger. The pose model is fetched once from Google's
+model storage and cached; the MediaPipe WASM runtime is served from this site.
 
-- **Camera permission is required** to run pose detection.
-- **No video is uploaded by default.** Pose detection runs locally in the browser.
-- Workout sessions are saved in your browser storage (`localStorage`) unless you clear them.
-
-## Run locally
-
-1. Install dependencies
+## Develop
 
 ```bash
 npm install
+npm run dev      # http://localhost:5173
+npm test         # counter tests on synthetic movement
+npm run build    # static site in dist/
 ```
 
-2. Start the dev server
+Try any movement without a camera at `/count/<id>?demo` — the drawn figure
+stands in for the camera and drives the real counter.
 
-```bash
-npm run dev
-```
+## Stack
 
-3. Open
-
-http://localhost:3000
-
-## Notes / troubleshooting
-
-- Camera access typically requires **HTTPS** in production (Vercel provides this automatically).
-- For best results, use good lighting and keep your full body in frame.
-
-## Roadmap ideas
-
-- Custom plan builder
-- Session summaries and trends (weekly volume, PRs)
-- More exercises and stricter form scoring
+Vite + TypeScript, no UI framework. One runtime dependency:
+`@mediapipe/tasks-vision`. Hosted on Vercel as static files.
+Fraunces, Spectral and DM Mono.

@@ -1,3 +1,0 @@
-app/pose/components/WorkoutControls.tsx(153,52): error TS2339: Property 'title' does not exist on type 'CustomWorkout'.
-app/pose/PoseRepCounter.tsx(320,27): error TS2552: Cannot find name 'sessionRunning'. Did you mean 'setSessionRunning'?
-app/pose/PoseRepCounter.tsx(334,53): error TS2552: Cannot find name 'sessionRunning'. Did you mean 'setSessionRunning'?
