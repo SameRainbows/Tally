@@ -60,3 +60,7 @@ stands in for the camera and drives the real counter.
 Vite + TypeScript, no UI framework. One runtime dependency:
 `@mediapipe/tasks-vision`. Hosted on Vercel as static files.
 Fraunces, Spectral and DM Mono.
+
+---
+
+Made by [Mehmet Dedeler](https://mehmetdedeler.com).
